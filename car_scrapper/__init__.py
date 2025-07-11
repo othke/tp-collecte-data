@@ -7,6 +7,7 @@ from .database import CarDatabase
 from .extractor import AlbiPageExtractor
 from .navigator import AlbiNavigator
 from .scraper import AlbiScraper
+from .api import CarAPI
 
 __version__ = "1.0.0"
 __author__ = "Car Scrapper Team"
@@ -17,5 +18,6 @@ __all__ = [
     "CarDatabase",
     "AlbiPageExtractor",
     "AlbiNavigator",
-    "AlbiScraper"
+    "AlbiScraper",
+    "CarAPI"
 ] 

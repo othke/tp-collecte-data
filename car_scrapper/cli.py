@@ -50,10 +50,6 @@ def main():
         
         # Scraper les pages
         scraper.scrap_from_page(args.start_page, args.pages)
-        
-        # Afficher toutes les voitures de la base de données
-        print("\n" + "="*50)
-        scraper.display_all_cars_from_db()
 
 
 if __name__ == "__main__":

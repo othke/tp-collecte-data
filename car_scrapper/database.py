@@ -129,4 +129,124 @@ class CarDatabase:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT COUNT(*) FROM Car")
-            return cursor.fetchone()[0] 
+            return cursor.fetchone()[0]
+    
+    def get_car_by_id(self, car_id: int) -> Car:
+        """Récupère une voiture par son ID"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT id, make, model, year, price, mileage, fuel, location, options, detail_url 
+                FROM Car WHERE id = ?
+            """, (car_id,))
+            row = cursor.fetchone()
+            
+            if row:
+                options = json.loads(row[8]) if row[8] else []
+                car = Car(
+                    make=row[1],
+                    model=row[2],
+                    year=row[3],
+                    price=row[4],
+                    mileage=row[5],
+                    fuel=row[6],
+                    location=row[7],
+                    options=options,
+                    detail_url=row[9]
+                )
+                # Ajouter l'ID à l'objet car
+                car.id = row[0]
+                return car
+            
+            return None
+    
+    def get_cars_with_filters(self, filters: dict, sort_by: str = 'id', sort_order: str = 'asc', 
+                             page: int = 1, per_page: int = 20) -> tuple[list[Car], int]:
+        """
+        Récupère les voitures avec filtres, tri et pagination directement en SQL
+        Retourne (voitures, total_count)
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            
+            # Construire la requête SQL avec filtres
+            where_conditions = []
+            params = []
+            
+            # Filtres
+            if filters.get('make'):
+                where_conditions.append("LOWER(make) LIKE LOWER(?)")
+                params.append(f"%{filters['make']}%")
+            
+            if filters.get('model'):
+                where_conditions.append("LOWER(model) LIKE LOWER(?)")
+                params.append(f"%{filters['model']}%")
+            
+            if filters.get('fuel'):
+                where_conditions.append("LOWER(fuel) LIKE LOWER(?)")
+                params.append(f"%{filters['fuel']}%")
+            
+            if filters.get('price_lt') is not None:
+                where_conditions.append("price < ?")
+                params.append(filters['price_lt'])
+            
+            if filters.get('price_gt') is not None:
+                where_conditions.append("price > ?")
+                params.append(filters['price_gt'])
+            
+            if filters.get('year_lt') is not None:
+                where_conditions.append("year < ?")
+                params.append(filters['year_lt'])
+            
+            if filters.get('year_gt') is not None:
+                where_conditions.append("year > ?")
+                params.append(filters['year_gt'])
+            
+            # Construire la clause WHERE
+            where_clause = ""
+            if where_conditions:
+                where_clause = "WHERE " + " AND ".join(where_conditions)
+            
+            # Validation du champ de tri
+            valid_sort_fields = ['id', 'make', 'model', 'year', 'price', 'mileage', 'fuel', 'location']
+            if sort_by not in valid_sort_fields:
+                sort_by = 'id'
+            
+            # Construire la clause ORDER BY
+            order_clause = f"ORDER BY {sort_by} {sort_order.upper()}"
+            
+            # Requête pour compter le total
+            count_query = f"SELECT COUNT(*) FROM Car {where_clause}"
+            cursor.execute(count_query, params)
+            total_count = cursor.fetchone()[0]
+            
+            # Requête pour récupérer les données avec pagination
+            limit = per_page
+            offset = (page - 1) * per_page
+            
+            data_query = f"""
+                SELECT id, make, model, year, price, mileage, fuel, location, options, detail_url 
+                FROM Car {where_clause} {order_clause} LIMIT ? OFFSET ?
+            """
+            cursor.execute(data_query, params + [limit, offset])
+            rows = cursor.fetchall()
+            
+            # Convertir les résultats en objets Car
+            cars = []
+            for row in rows:
+                options = json.loads(row[8]) if row[8] else []
+                car = Car(
+                    make=row[1],
+                    model=row[2],
+                    year=row[3],
+                    price=row[4],
+                    mileage=row[5],
+                    fuel=row[6],
+                    location=row[7],
+                    options=options,
+                    detail_url=row[9]
+                )
+                car.id = row[0]
+                cars.append(car)
+            
+            return cars, total_count 

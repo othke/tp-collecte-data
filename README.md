@@ -74,6 +74,66 @@ python -m car_scrapper.cli --db-path my_cars.db
 python main.py
 ```
 
+### 🚀 API REST
+
+Le projet inclut une API REST pour accéder aux données via HTTP.
+
+#### Démarrer le serveur API
+```bash
+# Serveur par défaut (port 5000)
+python server.py
+
+# Serveur personnalisé
+python server.py --host 127.0.0.1 --port 8080 --debug
+
+# Avec base de données personnalisée
+python server.py --db-path my_cars.db
+```
+
+#### Endpoints disponibles
+
+**GET /api/cars** - Liste des voitures avec filtres et pagination
+```bash
+# Toutes les voitures
+curl "http://localhost:5000/api/cars"
+
+# Avec pagination
+curl "http://localhost:5000/api/cars?page=1&per_page=10"
+
+# Avec filtres
+curl "http://localhost:5000/api/cars?make=Mazda&fuel=Électrique&price_lt=30000"
+
+# Avec tri
+curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
+```
+
+**GET /api/cars/{id}** - Détails d'une voiture
+```bash
+curl "http://localhost:5000/api/cars/1"
+```
+
+**GET /api/stats** - Statistiques de la base de données
+```bash
+curl "http://localhost:5000/api/stats"
+```
+
+#### Paramètres de filtrage
+- `make` : Marque du véhicule
+- `model` : Modèle du véhicule
+- `fuel` : Type de carburant (Essence/Électrique)
+- `price_lt` : Prix inférieur à
+- `price_gt` : Prix supérieur à
+- `year_lt` : Année inférieure à
+- `year_gt` : Année supérieure à
+
+#### Paramètres de pagination
+- `page` : Numéro de page (défaut: 1)
+- `per_page` : Nombre d'éléments par page (max: 50, défaut: 20)
+
+#### Paramètres de tri
+- `sort_by` : Champ de tri (id, make, model, year, price, mileage, fuel, location)
+- `sort_order` : Ordre de tri (asc, desc)
+
 ## 🗄️ Base de données
 
 Le scraper utilise SQLite pour stocker les données des voitures. Chaque voiture est identifiée par son `detail_url` unique.

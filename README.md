@@ -2,6 +2,8 @@
 
 Un outil de scraping pour les sites de vente de voitures, spécialement conçu pour Albi.ca.
 
+Présentation du projet : [Presentation](https://othke.github.io/tp-collecte-data/)
+
 ## 🚀 Installation
 
 ### Installation en mode développement
@@ -168,10 +170,3 @@ Le scraper utilise SQLite pour stocker les données des voitures. Chaque voiture
 - `beautifulsoup4` : Parsing HTML
 - `tabulate` : Affichage tabulaire
 - `sqlite3` : Base de données (inclus avec Python)
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Signaler des bugs
-- Proposer des améliorations
-- Ajouter de nouveaux sites de scraping

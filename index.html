@@ -216,7 +216,7 @@
     <div class="navigation">
         <a href="#intro">Introduction</a>
         <a href="#caracteristiques">Caractéristiques</a>
-        <a href="#etapes">Étapes</a>
+        <a href="#etapes">Mise en Place</a>
         <a href="#tests">Tests</a>
         <a href="#parametres">Paramètres</a>
         <a href="#conclusion">Conclusion</a>
@@ -225,24 +225,33 @@
     <div class="container">
         <!-- Slide 1: Titre -->
         <div class="slide" id="intro">
-            <h1>Car Scrapper</h1>
-            <h2>Processus de Collecte de Données</h2>
+            <h1>Processus de Collecte de Données</h2>
+            <h2>Scraping pour albioccasion.com</h2>
             <div class="highlight">
                 <h3>TP1: Mise en place d'un processus de collecte de données</h3>
-                <p>Un système complet de scraping automatisé pour collecter des données de voitures depuis Albi.ca</p>
+                <p>Développement d'un système complet de scraping pour collecter des données de voitures depuis https://www.albioccasion.com</p>
             </div>
             <div class="grid-3">
                 <div class="card">
                     <h4>🎯 Objectif</h4>
-                    <p>Développer un système de scraping automatisé pour collecter et stocker des données de voitures</p>
+                    <ul>
+                        <li>Scraper un site Web</li>
+                        <li>Transformer les données en un format exploitable</li>
+                        <li>Stocker les données dans une base de données</li>
+                    </ul>
                 </div>
                 <div class="card">
                     <h4>🌐 Source</h4>
-                    <p>Site web Albi.ca (https://www.albioccasion.com)</p>
+                    <ul>
+                        <li>Site web Albi.ca (https://www.albioccasion.com)</li>
+                    </ul>
                 </div>
                 <div class="card">
                     <h4>💾 Destination</h4>
-                    <p>Base de données SQLite avec API REST</p>
+                    <ul>
+                        <li>Base de données SQLite</li>
+                        <li>API REST pour accéder aux données</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -252,8 +261,8 @@
             <h2>Caractéristiques du Processus</h2>
             
             <div class="grid-2">
-                <div>
-                    <h3>🏗️ Architecture Modulaire</h3>
+                <div class="card">
+                    <h3>🏗️ Architecture Modulaire</h4>
                     <ul>
                         <li><strong>Navigateur web</strong> (navigator.py) : Connexion et navigation</li>
                         <li><strong>Extracteur de données</strong> (extractor.py) : Parsing HTML</li>
@@ -262,63 +271,101 @@
                         <li><strong>API REST</strong> (api.py) : Accès HTTP</li>
                     </ul>
                 </div>
-                
-                <div>
-                    <h3>🔧 Fonctionnalités Avancées</h3>
+                <div class="card">
+                    <h3>🔧 Fonctionnalités</h3>
                     <ul>
-                        <li>Détection automatique du carburant</li>
+                        <li>Connexion au site web</li>
                         <li>Gestion de la pagination</li>
-                        <li>API REST complète</li>
-                        <li>Interface CLI</li>
+                        <li>Détection des informations de la voiture</li>
+                        <li>Standardisation des données</li>
                         <li>Gestion des doublons</li>
-                        <li>Mises à jour automatiques</li>
+                        <li>Insertion des données dans la base de données</li>
                     </ul>
                 </div>
             </div>
 
             <div class="highlight">
-                <h3>📊 Structure de la Base de Données</h3>
-                <p>Table <code>Car</code> avec 12 champs : id, make, model, year, price, mileage, fuel, location, options, detail_url, created_at, updated_at</p>
+                <h3>📊 Structure de la Base de Données (JSON)</h3>
+                <div class="code-block">
+                    <code>
+                        {
+                            "id": int,
+                            "make": str,
+                            "model": str,
+                            "year": int,
+                            "price": int,
+                            "mileage": int,
+                            "fuel": str,
+                    </code>
+                </div>
             </div>
         </div>
 
         <!-- Slide 3: Étapes de Mise en Place -->
         <div class="slide" id="etapes">
-            <h2>Étapes Principales de Mise en Place</h2>
+            <h2>Mise en Place</h2>
             
             <div class="grid-2">
-                <div>
-                    <h3>🔌 Connexion à la Source</h3>
-                    <div class="code-block">
+                <div class="card">
+                    <h3>👨🎼 Orchestration</h3>
+                    <pre>
+class AlbiScraper:
+    def __init__(self):
+        self.navigator = AlbiNavigator()
+        self.database = AlbiDatabase()
+                    </pre>
+                    <ul>
+                        <li>Responsable du processus de scraping</li>
+                        <li>Contrôle la navigation et l'extraction des données</li>
+                        <li>Gère l'insertion des données dans la base de données</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🧭 Navigation</h3>
+                    <pre>
 class AlbiNavigator:
     def __init__(self):
         self.base_url = "https://www.albioccasion.com"
         self.playwright = sync_playwright().start()
         self.browser = self.playwright.chromium.launch()
         self.page = self.browser.new_page()
-                    </div>
+                    </pre>
                     <ul>
-                        <li>Utilisation de Playwright</li>
-                        <li>Gestion des timeouts</li>
-                        <li>Support de la pagination</li>
+                        <li>Responsable du navigateur</li>
+                        <li>Contrôle de l'API Playwright</li>
                     </ul>
                 </div>
-                
-                <div>
+        
+    
+                <div class="card">
                     <h3>📤 Extraction des Données</h3>
+                    <pre>
+class AlbiExtractor:
+    def __init__(self):
+        self.page = self.browser.new_page()
+        self.soup = BeautifulSoup(self.page.content(), 'html.parser')
+                    </pre>
                     <ul>
                         <li>Parsing HTML avec BeautifulSoup</li>
-                        <li>Extraction des métadonnées structurées</li>
-                        <li>Détection du type de carburant</li>
-                        <li>Nettoyage et validation</li>
+                        <li>Standardisation des données</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>📤 Base de Données</h3>
+                    <pre>
+class CarDatabase:
+    def __init__(self):
+        self.conn = sqlite3.connect('cars.db')
+        self.cursor = self.conn.cursor()
+                    </pre>
+                    <ul>
+                        <li>Responsable de la base de données</li>
+                        <li>Stockage des données</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="highlight">
-                <h3>💾 Stockage et Orchestration</h3>
-                <p>Gestion automatique des doublons, mises à jour, et requêtes optimisées avec filtres et pagination</p>
-            </div>
         </div>
 
         <!-- Slide 4: Tests -->
@@ -326,9 +373,9 @@ class AlbiNavigator:
             <h2>Comment Tester l'Application</h2>
             
             <div class="grid-2">
-                <div>
+                <div class="code-block">
                     <h3>🧪 Tests de Base</h3>
-                    <div class="code-block">
+                    <pre>
 # Exécuter le script principal
 python main.py
 
@@ -337,29 +384,31 @@ python -m car_scrapper.cli --start-page 1 --pages 2
 
 # Afficher toutes les voitures
 python -m car_scrapper.cli --show-all
-                    </div>
+                    </pre>
                 </div>
                 
-                <div>
+                <div class="code-block">
                     <h3>🌐 Tests API REST</h3>
-                    <div class="code-block">
+                    <pre>
 # Démarrer le serveur
 python server.py
 
 # Tester les endpoints
 curl "http://localhost:5000/api/cars"
 curl "http://localhost:5000/api/stats"
-                    </div>
+                    </pre>
                 </div>
             </div>
 
             <div class="highlight">
-                <h3>🔍 Tests Avancés</h3>
                 <div class="code-block">
+                <h3>🔍 Tests Avancés</h3>
+                    <pre>
 # Filtrage et pagination
 curl "http://localhost:5000/api/cars?price_lt=30000&year_gt=2020"
 curl "http://localhost:5000/api/cars?page=1&per_page=10"
 curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
+                    </pre>
                 </div>
             </div>
         </div>
@@ -370,20 +419,16 @@ curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
             
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-number">2-3s</div>
+                    <div class="stat-number">5-6s</div>
                     <div class="stat-label">Temps par page</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">>95%</div>
+                    <div class="stat-number">>80%</div>
                     <div class="stat-label">Taux de succès</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">20</div>
+                    <div class="stat-number">12</div>
                     <div class="stat-label">Éléments/page (API)</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">5000</div>
-                    <div class="stat-label">Port par défaut</div>
                 </div>
             </div>
 
@@ -393,9 +438,7 @@ curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
                     <ul>
                         <li>Nombre de pages à scraper</li>
                         <li>Page de départ</li>
-                        <li>Délai entre les pages</li>
-                        <li>Mode headless</li>
-                    </ul>
+                        <li>Nombre de pages à scraper</li>
                 </div>
                 
                 <div class="card">
@@ -431,7 +474,7 @@ curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
                         <li><strong>Pagination dynamique</strong> : Analyse complexe du HTML</li>
                         <li><strong>Détection carburant</strong> : Overlays gouvernementaux</li>
                         <li><strong>Gestion timeouts</strong> : Pages JavaScript modernes</li>
-                        <li><strong>Optimisation performances</strong> : Grandes quantités de données</li>
+                        <li>Beaucoup de site utilisent des techniques de protection contre le scraping sophistiquées</li>
                     </ul>
                 </div>
                 
@@ -443,8 +486,7 @@ curl "http://localhost:5000/api/cars?sort_by=price&sort_order=desc"
                         <li><strong>Gestion BDD</strong> : SQLite avec optimisations</li>
                         <li><strong>API REST</strong> : Endpoints complets</li>
                         <li><strong>Gestion d'erreurs</strong> : Robustesse</li>
-                        <li><strong>Documentation</strong> : Tests et docs</li>
-                    </ul>
+                        <li><strong>Documentation</strong>
                 </div>
             </div>
 

@@ -153,9 +153,6 @@ def scrap_from_page(self, start_page_number: int = 1, number_of_pages_to_scrap: 
 
 #### 4.1 Test du scraping de base
 ```bash
-# Exécuter le script principal
-python main.py
-
 # Utiliser l'interface CLI
 python -m car_scrapper.cli --start-page 1 --pages 2
 

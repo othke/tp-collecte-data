@@ -296,6 +296,10 @@
                             "price": int,
                             "mileage": int,
                             "fuel": str,
+                            "location": str,
+                            "options": list[str],
+                            "detail_url": str
+                        }
                     </code>
                 </div>
             </div>
@@ -376,9 +380,6 @@ class CarDatabase:
                 <div class="code-block">
                     <h3>🧪 Tests de Base</h3>
                     <pre>
-# Exécuter le script principal
-python main.py
-
 # Interface CLI
 python -m car_scrapper.cli --start-page 1 --pages 2
 
